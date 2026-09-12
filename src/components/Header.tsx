@@ -15,29 +15,35 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header 
       id="main-header" 
-      className="sticky top-0 z-40 bg-[#08090c]/95 backdrop-blur-xl border-b border-[#f59e0b]/20 px-4 sm:px-6 py-3"
+      className="shrink-0 z-40 bg-[#08090c]/95 backdrop-blur-xl border-b border-[#f59e0b]/20 px-4 sm:px-6 py-2.5"
     >
-      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         {/* Brand & Concept Identity: Diecast Spotlight + THE WALL OF FAME */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] flex items-center justify-center shadow-lg shadow-[#f59e0b]/25 text-black font-impact text-2xl tracking-tighter shrink-0 border border-[#fef3c7]/30">
-            <Crown className="w-5 h-5 fill-black text-black" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] flex items-center justify-center shadow-lg shadow-[#f59e0b]/25 text-black shrink-0 border border-[#fef3c7]/30">
+            <Crown className="w-4 h-4 fill-black text-black" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#f59e0b] flex items-center gap-1">
-                <span>Diecast Spotlight</span>
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#f59e0b]">
+                Diecast Spotlight
               </span>
               <span className="w-1 h-1 rounded-full bg-white/30" />
               <span className="text-[10px] font-mono text-amber-400 font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] animate-ping" />
-                Live Inductee
+                Live #1 Inductee
               </span>
             </div>
-            <h1 className="font-display font-black text-lg sm:text-xl md:text-2xl text-white tracking-wider uppercase leading-none flex items-center gap-2">
+            <h1 className="font-display font-black text-base sm:text-lg md:text-xl text-white tracking-wider uppercase leading-none flex items-center gap-2">
               <span>THE WALL OF FAME</span>
             </h1>
           </div>
+        </div>
+
+        {/* Subtitle / Callout Tagline on Desktop */}
+        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-[#f59e0b]/10 border border-[#f59e0b]/25 text-xs text-neutral-300">
+          <Sparkles className="w-3.5 h-3.5 text-[#f59e0b]" />
+          <span>Upload your Hot Wheels & outbid to immortalize your casting as #1</span>
         </div>
 
         {/* Right side: Share in Any Media + Reset Demo */}
@@ -52,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="hidden xs:inline">Share Media</span>
           </button>
 
-          {/* Reset Demo button for repeatable testing */}
+          {/* Reset Demo button */}
           <button
             onClick={onResetDemo}
             title="Reset to Initial Demo State ($7.50 / Alex)"
@@ -66,3 +72,4 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
+

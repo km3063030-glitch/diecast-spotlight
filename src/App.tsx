@@ -168,7 +168,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08090c] text-[#e6e8ee] carbon-grid flex flex-col justify-between selection:bg-[#f59e0b] selection:text-black">
+    <div className="min-h-screen lg:h-screen lg:max-h-screen bg-[#08090c] text-[#e6e8ee] carbon-grid flex flex-col justify-between overflow-x-hidden lg:overflow-hidden selection:bg-[#f59e0b] selection:text-black">
       {/* Toast Notification */}
       <AnimatePresence>
         {successToast && (
@@ -176,10 +176,10 @@ export default function App() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-16 inset-x-4 max-w-md mx-auto z-50 p-3.5 rounded-xl bg-gradient-to-r from-amber-950/90 via-[#1e1b10] to-black/90 border border-[#f59e0b]/60 shadow-2xl shadow-[#f59e0b]/20 text-white text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 backdrop-blur-xl"
+            className="fixed top-14 inset-x-4 max-w-md mx-auto z-50 p-3 rounded-xl bg-gradient-to-r from-amber-950/90 via-[#1e1b10] to-black/90 border border-[#f59e0b]/60 shadow-2xl shadow-[#f59e0b]/20 text-white text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 backdrop-blur-xl"
           >
             <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-5 h-5 text-[#f59e0b] shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#f59e0b] shrink-0" />
               <span>{successToast}</span>
             </div>
             <button
@@ -199,30 +199,14 @@ export default function App() {
         currentSpotPrice={currentSpotPrice}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 md:py-8 flex flex-col justify-center">
-        {/* Wall of Fame Hero Banner */}
-        <div className="text-center mb-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f59e0b]/10 border border-[#f59e0b]/30 mb-2">
-            <Crown className="w-3.5 h-3.5 text-[#f59e0b]" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#f59e0b]">
-              The Official Wall of Fame
-            </span>
-          </div>
-          <h2 className="font-display font-black text-2xl sm:text-3xl md:text-4xl tracking-wider uppercase text-white drop-shadow-md">
-            THE WALL OF FAME
-          </h2>
-          <p className="text-xs sm:text-sm text-neutral-400 mt-1 max-w-md mx-auto font-medium">
-            Upload your Hot Wheels photo & outbid the spot to immortalize your casting as #1
-          </p>
-        </div>
-
+      {/* Main Content Area: 100vh fitted grid */}
+      <main className="flex-1 min-h-0 max-w-7xl mx-auto w-full px-3 sm:px-5 py-3 lg:py-4 flex flex-col justify-between">
         {/* Desktop Two-Column / Mobile Stacked Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch flex-1 min-h-0">
           {/* ========================================================================= */}
-          {/* LEFT: Wall of Fame Inductee Social Post with Live Spot Timer              */}
+          {/* LEFT: Wall of Fame Inductee Social Post                                   */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-7 flex flex-col">
+          <div className="lg:col-span-7 flex flex-col min-h-0 h-full">
             <CollectorCarPostCard
               post={post}
               onUpvote={handleUpvote}
@@ -234,7 +218,7 @@ export default function App() {
           {/* ========================================================================= */}
           {/* RIGHT: Spot History (Descending order • Top amount at top)                */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-5 flex flex-col">
+          <div className="lg:col-span-5 flex flex-col min-h-0 h-full">
             <SpotHistoryList
               history={history}
               currentHolder={currentHolder}
@@ -260,8 +244,8 @@ export default function App() {
       />
 
       {/* Minimal Wall of Fame Footer */}
-      <footer className="border-t border-[#f59e0b]/20 py-4 px-4 sm:px-6 text-center text-xs text-neutral-400">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <footer className="shrink-0 border-t border-[#f59e0b]/20 py-2.5 px-4 sm:px-6 text-center text-xs text-neutral-400">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1.5">
           <span className="flex items-center gap-1.5 justify-center">
             <Award className="w-3.5 h-3.5 text-[#f59e0b]" />
             <strong className="text-white">Diecast Spotlight</strong> — THE WALL OF FAME
