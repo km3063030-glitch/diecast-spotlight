@@ -1,0 +1,6 @@
+{
+  "name": "Diecast Spotlight",
+  "description": "THE WALL OF FAME — One prestigious digital display spot where diecast collectors compete to induct and showcase their Hot Wheels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

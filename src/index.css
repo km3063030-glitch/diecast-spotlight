@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --spotlight-glow: rgba(255, 85, 0, 0.25);
+    --spotlight-blue: rgba(56, 189, 248, 0.2);
+  }
+
+  body {
+    background-color: #08090c;
+    color: #e6e8ee;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: 'Chakra Petch', sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-impact {
+    font-family: 'Teko', sans-serif;
+    line-height: 0.9;
+  }
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0f14;
+}
+::-webkit-scrollbar-thumb {
+  background: #232733;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5500;
+}
+
+/* Glassmorphism surfaces */
+.glass-panel {
+  background: rgba(18, 21, 28, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-gold {
+  background: linear-gradient(135deg, rgba(26, 22, 14, 0.85) 0%, rgba(18, 21, 28, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.glass-panel-hero {
+  background: radial-gradient(circle at 15% 20%, rgba(255, 85, 0, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+              rgba(15, 17, 23, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Glow effects */
+.glow-orange {
+  box-shadow: 0 0 40px -10px rgba(255, 85, 0, 0.35);
+}
+
+.glow-blue {
+  box-shadow: 0 0 35px -8px rgba(56, 189, 248, 0.3);
+}
+
+.glow-subtle {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+/* Carbon weave subtle texture pattern */
+.carbon-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
