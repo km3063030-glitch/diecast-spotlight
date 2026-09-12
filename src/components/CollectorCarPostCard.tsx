@@ -4,7 +4,7 @@ import { Heart, Flame, Zap, Trophy, Sparkles, Edit3, ShieldCheck, Share2, Award,
 import { motion } from 'motion/react';
 
 interface CollectorCarPostCardProps {
-  post: CollectorCarPost;
+  post: CollectorCarPost | null;
   onUpvote: () => void;
   onOpenPutOnWallModal: (initialCustomPrice?: number) => void;
   onOpenShareModal: () => void;
@@ -31,7 +31,7 @@ export const CollectorCarPostCard: React.FC<CollectorCarPostCardProps> = ({
   onOpenPutOnWallModal,
   onOpenShareModal,
 }) => {
-  const minBidPrice = Math.round((post.spotPrice + 0.50) * 100) / 100;
+  const minBidPrice = post ? Math.round((post.spotPrice + 0.50) * 100) / 100 : 1.00;
   const [customPrice, setCustomPrice] = useState<number>(minBidPrice);
   const [heartAnim, setHeartAnim] = useState(false);
 
@@ -44,27 +44,75 @@ export const CollectorCarPostCard: React.FC<CollectorCarPostCardProps> = ({
       setNow(Date.now());
     }, 1000);
     return () => clearInterval(interval);
-  }, [post.inductedAt]);
+  }, [post?.inductedAt]);
 
-  const elapsedSeconds = Math.max(0, Math.floor((now - (post.inductedAt || Date.now())) / 1000));
+  const elapsedSeconds = post ? Math.max(0, Math.floor((now - (post.inductedAt || Date.now())) / 1000)) : 0;
   const formattedTimeOnSpot = formatDuration(elapsedSeconds);
 
   useEffect(() => {
     if (customPrice < minBidPrice) {
       setCustomPrice(minBidPrice);
     }
-  }, [post.spotPrice, minBidPrice]);
+  }, [post?.spotPrice, minBidPrice]);
 
   const handleHeartClick = () => {
-    onUpvote();
-    setHeartAnim(true);
-    setTimeout(() => setHeartAnim(false), 800);
+    if (post) {
+      onUpvote();
+      setHeartAnim(true);
+      setTimeout(() => setHeartAnim(false), 800);
+    }
   };
 
   const handlePriceQuickIncrement = (delta: number) => {
     const updated = Math.max(minBidPrice, Math.round((customPrice + delta) * 100) / 100);
     setCustomPrice(updated);
   };
+
+  // If no post exists yet (Clean Blank State)
+  if (!post) {
+    return (
+      <article
+        id="collector-social-post-empty"
+        className="relative w-full h-full rounded-2xl bg-[#0e1017]/95 border-2 border-[#f59e0b]/40 backdrop-blur-2xl shadow-2xl shadow-black/90 overflow-hidden flex flex-col justify-between p-6 text-center"
+      >
+        <div className="absolute -top-24 -left-24 w-80 h-80 bg-[#f59e0b]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#ff5500]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="my-auto flex flex-col items-center justify-center space-y-4 py-8">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#f59e0b]/20 to-[#ff5500]/20 border-2 border-[#f59e0b]/50 flex items-center justify-center shadow-xl shadow-[#f59e0b]/20">
+            <Crown className="w-10 h-10 text-[#f59e0b]" />
+          </div>
+
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold uppercase tracking-wider mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Wall of Fame Vacant</span>
+            </div>
+            <h2 className="font-display font-black text-2xl sm:text-3xl text-white uppercase tracking-wide">
+              NO #1 INDUCTEE YET
+            </h2>
+            <p className="text-xs sm:text-sm text-neutral-400 max-w-sm mx-auto font-medium mt-1">
+              Be the very first collector to upload your Hot Wheels casting and claim #1 on THE WALL OF FAME!
+            </p>
+          </div>
+
+          <button
+            onClick={() => onOpenPutOnWallModal(1.00)}
+            className="py-3.5 px-8 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ff6a00] to-[#ff2d55] hover:brightness-110 active:scale-[0.99] text-white font-display text-base sm:text-lg font-black tracking-wider uppercase shadow-xl shadow-[#f59e0b]/25 transition-all cursor-pointer flex items-center justify-center gap-2.5 border border-white/20"
+          >
+            <Zap className="w-5 h-5 fill-white text-white" />
+            <span>Claim #1 Spot — $1.00</span>
+          </button>
+        </div>
+
+        <div className="flex items-center justify-center gap-1.5 text-xs text-neutral-400 pt-2 border-t border-white/10">
+          <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          <span>Instant induction • Upload your photo from phone or desktop</span>
+        </div>
+      </article>
+    );
+  }
+
 
   return (
     <article

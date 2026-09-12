@@ -6,7 +6,7 @@ import { CollectorCarPost } from '../types';
 interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
-  post: CollectorCarPost;
+  post: CollectorCarPost | null;
 }
 
 export const ShareModal: React.FC<ShareModalProps> = ({
@@ -19,8 +19,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({
   if (!isOpen) return null;
 
   const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://diecast-spotlight.app';
-  const shareTitle = `🏆 ${post.collectorName}'s ${post.carName} on THE WALL OF FAME ($${post.spotPrice.toFixed(2)})`;
-  const shareText = `Check out ${post.collectorName}'s ${post.carName} reigning as #1 on DIECAST SPOTLIGHT — THE WALL OF FAME at $${post.spotPrice.toFixed(2)}! Can anyone beat this spot?`;
+  const shareTitle = post
+    ? `🏆 ${post.collectorName}'s ${post.carName} on THE WALL OF FAME ($${post.spotPrice.toFixed(2)})`
+    : `🏆 DIECAST SPOTLIGHT — THE WALL OF FAME`;
+  const shareText = post
+    ? `Check out ${post.collectorName}'s ${post.carName} reigning as #1 on DIECAST SPOTLIGHT — THE WALL OF FAME at $${post.spotPrice.toFixed(2)}! Can anyone beat this spot?`
+    : `Check out DIECAST SPOTLIGHT — THE WALL OF FAME! Outbid the spot to immortalize your Hot Wheels casting as #1!`;
 
   const handleCopyLink = async () => {
     try {
@@ -129,25 +133,45 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           </div>
 
           {/* Preview Card */}
-          <div className="p-3 rounded-xl bg-black/50 border border-[#f59e0b]/20 flex items-center gap-3 mb-5">
-            <img
-              src={post.imageUrl}
-              alt={post.carName}
-              className="w-16 h-12 rounded-lg object-cover border border-white/10 shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] uppercase tracking-wider">
-                <Award className="w-3 h-3" />
-                <span>Wall of Fame Inductee</span>
+          {post ? (
+            <div className="p-3 rounded-xl bg-black/50 border border-[#f59e0b]/20 flex items-center gap-3 mb-5">
+              <img
+                src={post.imageUrl}
+                alt={post.carName}
+                className="w-16 h-12 rounded-lg object-cover border border-white/10 shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] uppercase tracking-wider">
+                  <Award className="w-3 h-3" />
+                  <span>Wall of Fame Inductee</span>
+                </div>
+                <h4 className="text-xs font-bold text-white truncate">
+                  {post.carName}
+                </h4>
+                <p className="text-[11px] text-neutral-400 font-mono">
+                  By {post.collectorName} • ${post.spotPrice.toFixed(2)}
+                </p>
               </div>
-              <h4 className="text-xs font-bold text-white truncate">
-                {post.carName}
-              </h4>
-              <p className="text-[11px] text-neutral-400 font-mono">
-                By {post.collectorName} • ${post.spotPrice.toFixed(2)}
-              </p>
             </div>
-          </div>
+          ) : (
+            <div className="p-3 rounded-xl bg-black/50 border border-[#f59e0b]/20 flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 rounded-lg bg-[#f59e0b]/15 border border-[#f59e0b]/40 flex items-center justify-center shrink-0 text-[#f59e0b]">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] uppercase tracking-wider">
+                  <Award className="w-3 h-3" />
+                  <span>Wall of Fame Open</span>
+                </div>
+                <h4 className="text-xs font-bold text-white truncate">
+                  Diecast Spotlight Leaderboard
+                </h4>
+                <p className="text-[11px] text-neutral-400 font-mono">
+                  Be the first #1 inductee
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Native Device Share (if available on mobile/supported browser) */}
           {'share' in navigator && (

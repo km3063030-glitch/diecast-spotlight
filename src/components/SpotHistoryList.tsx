@@ -46,76 +46,90 @@ export const SpotHistoryList: React.FC<SpotHistoryListProps> = ({
       </div>
 
       {/* History Items List (Descending Order: Top Amount at the Top) */}
-      <div className="relative flex-1 min-h-0 overflow-y-auto space-y-2 pr-1 my-1">
-        {/* Connector spine */}
-        <div className="absolute left-[16px] top-3 bottom-3 w-[2px] bg-gradient-to-b from-[#f59e0b] via-[#f59e0b]/30 to-white/5" />
+      <div className="relative flex-1 min-h-0 overflow-y-auto space-y-2 pr-1 my-1 flex flex-col">
+        {sortedHistory.length === 0 ? (
+          <div className="my-auto py-8 px-4 text-center border border-dashed border-white/10 rounded-xl bg-white/[0.02]">
+            <Crown className="w-8 h-8 text-neutral-600 mx-auto mb-2" />
+            <p className="text-xs font-bold text-neutral-300 uppercase tracking-wider">
+              NO SPOT HISTORY YET
+            </p>
+            <p className="text-[11px] text-neutral-500 mt-1 max-w-[200px] mx-auto">
+              Be the first to claim #1 on the Wall of Fame to start the leaderboard!
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Connector spine */}
+            <div className="absolute left-[16px] top-3 bottom-3 w-[2px] bg-gradient-to-b from-[#f59e0b] via-[#f59e0b]/30 to-white/5" />
 
-        {sortedHistory.map((item, index) => {
-          const isTopRank = index === 0;
+            {sortedHistory.map((item, index) => {
+              const isTopRank = index === 0;
 
-          return (
-            <motion.div
-              key={item.id || `${item.name}-${item.amount}-${index}`}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: index * 0.03 }}
-              className={`relative z-10 flex items-center justify-between px-3 py-2 sm:py-2.5 rounded-xl transition-all ${
-                isTopRank
-                  ? 'bg-gradient-to-r from-[#f59e0b]/25 via-[#ff5500]/15 to-[#161822] border-2 border-[#f59e0b] shadow-lg shadow-[#f59e0b]/15'
-                  : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-neutral-400'
-              }`}
-            >
-              {/* Left: Rank & Collector Name */}
-              <div className="flex items-center gap-2.5 min-w-0">
-                {/* Rank Badge */}
-                <div
-                  className={`w-6.5 h-6.5 rounded-lg flex items-center justify-center text-xs font-mono font-bold shrink-0 transition-all ${
+              return (
+                <motion.div
+                  key={item.id || `${item.name}-${item.amount}-${index}`}
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: index * 0.03 }}
+                  className={`relative z-10 flex items-center justify-between px-3 py-2 sm:py-2.5 rounded-xl transition-all ${
                     isTopRank
-                      ? 'bg-gradient-to-br from-[#f59e0b] to-[#d97706] text-black shadow-md shadow-[#f59e0b]/40 ring-1 ring-[#f59e0b]/50'
-                      : 'bg-white/10 text-neutral-400'
+                      ? 'bg-gradient-to-r from-[#f59e0b]/25 via-[#ff5500]/15 to-[#161822] border-2 border-[#f59e0b] shadow-lg shadow-[#f59e0b]/15'
+                      : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-neutral-400'
                   }`}
                 >
-                  {isTopRank ? (
-                    <Crown className="w-3.5 h-3.5 fill-black text-black" />
-                  ) : (
-                    <span>#{index + 1}</span>
-                  )}
-                </div>
+                  {/* Left: Rank & Collector Name */}
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    {/* Rank Badge */}
+                    <div
+                      className={`w-6.5 h-6.5 rounded-lg flex items-center justify-center text-xs font-mono font-bold shrink-0 transition-all ${
+                        isTopRank
+                          ? 'bg-gradient-to-br from-[#f59e0b] to-[#d97706] text-black shadow-md shadow-[#f59e0b]/40 ring-1 ring-[#f59e0b]/50'
+                          : 'bg-white/10 text-neutral-400'
+                      }`}
+                    >
+                      {isTopRank ? (
+                        <Crown className="w-3.5 h-3.5 fill-black text-black" />
+                      ) : (
+                        <span>#{index + 1}</span>
+                      )}
+                    </div>
 
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <span
-                    className={`font-semibold text-xs sm:text-sm truncate ${
-                      isTopRank ? 'text-white font-bold' : 'text-neutral-300'
-                    }`}
-                  >
-                    {item.name}
-                  </span>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span
+                        className={`font-semibold text-xs sm:text-sm truncate ${
+                          isTopRank ? 'text-white font-bold' : 'text-neutral-300'
+                        }`}
+                      >
+                        {item.name}
+                      </span>
 
-                  {isTopRank && (
-                    <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[#f59e0b]/25 text-[#f59e0b] border border-[#f59e0b]/50 shrink-0">
-                      <Sparkles className="w-2 h-2" />
-                      #1
+                      {isTopRank && (
+                        <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[#f59e0b]/25 text-[#f59e0b] border border-[#f59e0b]/50 shrink-0">
+                          <Sparkles className="w-2 h-2" />
+                          #1
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right: Amount */}
+                  <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                    <span className="text-neutral-500 font-mono text-xs">—</span>
+                    <span
+                      className={`font-mono font-bold tracking-tight ${
+                        isTopRank
+                          ? 'text-base sm:text-lg text-[#f59e0b] font-black'
+                          : 'text-xs sm:text-sm text-neutral-300'
+                      }`}
+                    >
+                      ${item.amount.toFixed(2)}
                     </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Right: Amount */}
-              <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                <span className="text-neutral-500 font-mono text-xs">—</span>
-                <span
-                  className={`font-mono font-bold tracking-tight ${
-                    isTopRank
-                      ? 'text-base sm:text-lg text-[#f59e0b] font-black'
-                      : 'text-xs sm:text-sm text-neutral-300'
-                  }`}
-                >
-                  ${item.amount.toFixed(2)}
-                </span>
-              </div>
-            </motion.div>
-          );
-        })}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </>
+        )}
       </div>
 
       {/* Bottom Summary Bar */}
@@ -123,10 +137,12 @@ export const SpotHistoryList: React.FC<SpotHistoryListProps> = ({
         <span className="flex items-center gap-1">
           <Award className="w-3 h-3 text-[#f59e0b]" />
           <span>Top:</span>
-          <strong className="text-white font-bold">{highestItem?.name || currentHolder}</strong>
+          <strong className="text-white font-bold">{highestItem?.name || currentHolder || 'None'}</strong>
         </span>
         <span className="font-mono text-[#f59e0b] font-semibold">
-          High: ${highestItem?.amount.toFixed(2)} • Floor: ${lowestItem?.amount.toFixed(2)}
+          {highestItem
+            ? `High: $${highestItem.amount.toFixed(2)} • Floor: $${lowestItem.amount.toFixed(2)}`
+            : 'Wall of Fame Open'}
         </span>
       </div>
     </div>

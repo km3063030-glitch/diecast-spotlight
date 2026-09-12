@@ -58,14 +58,14 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="hidden xs:inline">Share Media</span>
           </button>
 
-          {/* Reset Demo button */}
+          {/* Clear Data button */}
           <button
             onClick={onResetDemo}
-            title="Reset to Initial Demo State ($7.50 / Alex)"
-            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-400 hover:text-white transition-colors text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+            title="Clear all spot data and return to blank Wall of Fame"
+            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-neutral-400 hover:text-rose-300 transition-colors text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Reset</span>
+            <span className="hidden sm:inline">Clear Data</span>
           </button>
         </div>
       </div>

@@ -8,44 +8,19 @@ import { SpotHistoryItem, CollectorCarPost } from './types';
 import { CheckCircle2, Award, Sparkles, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// Default initial state sorted in descending order with top amount at the top
-const DEFAULT_INITIAL_HISTORY: SpotHistoryItem[] = [
-  { id: '5', name: 'Alex', amount: 7.50, isCurrent: true, carName: "1971 Datsun 240Z 'Chameleon' RLC" },
-  { id: '4', name: 'Ryan', amount: 5.00 },
-  { id: '3', name: 'David', amount: 3.75 },
-  { id: '2', name: 'Mike', amount: 3.00 },
-  { id: '1', name: 'Jordan', amount: 2.50 },
-];
-
-const INITIAL_DEMO_TIME_OFFSET_MS = (18 * 60 + 42) * 1000; // 18m 42s ago
-
-const DEFAULT_POST: CollectorCarPost = {
-  id: 'post-top-1',
-  carName: "1971 Datsun 240Z 'Chameleon' RLC",
-  collectorName: 'Alex',
-  collectorHandle: '@alex_diecast',
-  collectorAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80',
-  rarity: 'RLC Exclusive',
-  year: '1971 / 2025 Edition',
-  shortDescription: 'Flawless Spectraflame chameleon finish shifting from emerald green to royal violet on deep-dish Real Riders with mirror chrome chassis.',
-  imageUrl: 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=1200&auto=format&fit=crop&q=85',
-  upvotes: 1248,
-  hasUpvoted: false,
-  hype: 99.2,
-  currentStatus: '👑 #1 Wall of Fame',
-  spotPrice: 7.50,
-  inductedAt: Date.now() - INITIAL_DEMO_TIME_OFFSET_MS,
-};
+// Default initial state starts blank until real users induct their Hot Wheels
+const DEFAULT_INITIAL_HISTORY: SpotHistoryItem[] = [];
 
 export default function App() {
-  // Persisted state for demo realism
+  // Persisted state for real user submissions
   const [history, setHistory] = useState<SpotHistoryItem[]>(() => {
     const saved = localStorage.getItem('diecast_spotlight_history');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure sorted descending by amount
-        return [...parsed].sort((a, b) => b.amount - a.amount);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return [...parsed].sort((a, b) => b.amount - a.amount);
+        }
       } catch (e) {
         console.error('Error parsing history', e);
       }
@@ -53,20 +28,19 @@ export default function App() {
     return DEFAULT_INITIAL_HISTORY;
   });
 
-  const [post, setPost] = useState<CollectorCarPost>(() => {
+  const [post, setPost] = useState<CollectorCarPost | null>(() => {
     const saved = localStorage.getItem('diecast_spotlight_post');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (!parsed.inductedAt) {
-          parsed.inductedAt = Date.now() - INITIAL_DEMO_TIME_OFFSET_MS;
+        if (parsed && parsed.carName) {
+          return parsed;
         }
-        return parsed;
       } catch (e) {
         console.error('Error parsing post', e);
       }
     }
-    return DEFAULT_POST;
+    return null;
   });
 
   const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
@@ -80,22 +54,27 @@ export default function App() {
   }, [history]);
 
   useEffect(() => {
-    localStorage.setItem('diecast_spotlight_post', JSON.stringify(post));
+    if (post) {
+      localStorage.setItem('diecast_spotlight_post', JSON.stringify(post));
+    } else {
+      localStorage.removeItem('diecast_spotlight_post');
+    }
   }, [post]);
 
   // Current holder & spot price (from the top amount at the top of history)
   const sortedHistory = [...history].sort((a, b) => b.amount - a.amount);
-  const currentTopItem = sortedHistory[0] || DEFAULT_INITIAL_HISTORY[0];
-  const currentHolder = currentTopItem.name;
-  const currentSpotPrice = currentTopItem.amount;
+  const currentTopItem = sortedHistory[0];
+  const currentHolder = currentTopItem ? currentTopItem.name : '';
+  const currentSpotPrice = currentTopItem ? currentTopItem.amount : 0;
 
   // Handle Upvotes
   const handleUpvote = () => {
-    setPost((prev) => ({
+    if (!post) return;
+    setPost((prev) => prev ? ({
       ...prev,
       hasUpvoted: !prev.hasUpvoted,
       upvotes: prev.hasUpvoted ? prev.upvotes - 1 : prev.upvotes + 1,
-    }));
+    }) : null);
   };
 
   // Open modal with pre-configured custom price
@@ -119,7 +98,6 @@ export default function App() {
     setHistory((prev) => [newEntry, ...prev].sort((a, b) => b.amount - a.amount));
 
     // Update social post to showcase the user's uploaded Hot Wheels
-    // CRITICAL: reset inductedAt to Date.now() so the duration timer resets to 0s!
     const newInductedAt = Date.now();
 
     setPost({
@@ -137,31 +115,27 @@ export default function App() {
       hype: 99.8,
       currentStatus: '👑 #1 Wall of Fame',
       spotPrice: submission.price,
-      inductedAt: newInductedAt, // RESETS timer to 0!
+      inductedAt: newInductedAt,
     });
 
     setIsTakeModalOpen(false);
 
     // Toast notification
     setSuccessToast(
-      `Induction complete! "${submission.carName}" is now #1 on THE WALL OF FAME at $${submission.price.toFixed(2)}! Timer reset to 0s.`
+      `Induction complete! "${submission.carName}" is now #1 on THE WALL OF FAME at $${submission.price.toFixed(2)}!`
     );
     setTimeout(() => {
       setSuccessToast(null);
     }, 5000);
   };
 
-  // Reset Demo
+  // Clear Data (resets to clean blank state)
   const handleResetDemo = () => {
-    const resetTime = Date.now() - INITIAL_DEMO_TIME_OFFSET_MS;
-    setHistory(DEFAULT_INITIAL_HISTORY);
-    setPost({
-      ...DEFAULT_POST,
-      inductedAt: resetTime,
-    });
+    setHistory([]);
+    setPost(null);
     localStorage.removeItem('diecast_spotlight_history');
     localStorage.removeItem('diecast_spotlight_post');
-    setSuccessToast('Demo reset: Wall of Fame returned to Alex ($7.50) & 1971 Datsun 240Z');
+    setSuccessToast('Wall of Fame cleared to blank state.');
     setTimeout(() => {
       setSuccessToast(null);
     }, 3000);
