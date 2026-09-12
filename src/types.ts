@@ -24,3 +24,10 @@ export interface CollectorCarPost {
   spotPrice: number;
   inductedAt: number; // Timestamp in ms when this car was put on the spot
 }
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
